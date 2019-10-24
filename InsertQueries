@@ -1,0 +1,241 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace DoctorDBLibrary.DataAccess
+{
+    public class InsertQueries
+    {
+        public async void CreateUser(TextBox username, TextBox password, TextBox Email, TextBox ContactNo)
+        {
+            try
+            {
+
+                using (SqlCommand cmd = new SqlCommand("CreateUser", GlobalConfig.SQLCONN))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@Username", username.Text);
+                    cmd.Parameters.AddWithValue("@UPassword", password.Text);
+                    cmd.Parameters.AddWithValue("@Email", Email.Text);
+                    cmd.Parameters.AddWithValue("@ContactNo", ContactNo.Text);
+
+                    GlobalConfig.SQLCONN.Open();
+                    await cmd.ExecuteNonQueryAsync();
+                    GlobalConfig.SQLCONN.Close();
+                    MessageBox.Show("Congradulations you are now a user");
+                }
+            }
+            catch (Exception Ex)
+            {
+                MessageBox.Show($"{Ex.Message}");
+            }
+            finally
+            {
+                GlobalConfig.SQLCONN.Close();
+            }
+
+        }
+
+        // - Overloaded CreateUser Method with string signatures  - This is so we can do testing in our console application
+        public string CreateUser(string username, string password, string Email, string ContactNo)
+        {
+            try
+            {
+
+                using (SqlCommand cmd = new SqlCommand("CreateUser", GlobalConfig.SQLCONN))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@Username", username);
+                    cmd.Parameters.AddWithValue("@UPassword", password);
+                    cmd.Parameters.AddWithValue("@Email", Email);
+                    cmd.Parameters.AddWithValue("@ContactNo", ContactNo);
+
+                    GlobalConfig.SQLCONN.Open();
+                    cmd.ExecuteNonQuery();
+                    GlobalConfig.SQLCONN.Close();
+                    return "Congradulations you are now a user";
+                }
+            }
+            catch (Exception Ex)
+            {
+                return Ex.Message;
+            }
+            
+
+        }
+
+        public void CreatePatient(TextBox FirstName, TextBox LastName, TextBox  IDNumber, TextBox ContactNo, TextBox Email, TextBox PostalAddress, TextBox MedicalAidNo)
+        {
+            Task t = new Task(() =>
+           {
+               try
+               {
+
+                   using (SqlCommand cmd = new SqlCommand("CreatePatient", GlobalConfig.SQLCONN))
+                   {                                      
+                       cmd.CommandType = CommandType.StoredProcedure;
+
+                       cmd.Parameters.AddWithValue("@FirstName", FirstName.Text);
+                       cmd.Parameters.AddWithValue("@LastName", LastName.Text);
+                       cmd.Parameters.AddWithValue("@IDNumber", IDNumber.Text);
+                       cmd.Parameters.AddWithValue("@Email", Email.Text);
+                       cmd.Parameters.AddWithValue("@ContactNo", ContactNo.Text);
+                       cmd.Parameters.AddWithValue("@PostalAddress", PostalAddress.Text);
+                       cmd.Parameters.AddWithValue("@MedicalAidNo", MedicalAidNo.Text);
+
+                       GlobalConfig.SQLCONN.Open();
+                       cmd.ExecuteNonQuery();
+                       GlobalConfig.SQLCONN.Close();
+                       MessageBox.Show("Your Patient Has Been Saved");
+                   }
+               }
+               catch (Exception Ex)
+               {
+                   MessageBox.Show($"{Ex.Message}");
+               }
+               finally
+               {
+                   GlobalConfig.SQLCONN.Close();
+               }
+           });
+
+            t.RunSynchronously();
+            t.Wait();
+
+        }
+
+        // Overloaded PATIENT Method with string signatures
+        public void CreatePatient(string FirstName, string LastName, string IDNumber, string ContactNo, string Email, string PostalAddress, string MedicalAidNo)
+        {
+            // Task so that it can run in your a THREAD
+            Task t = new Task(() =>
+            {
+                try
+                {
+
+                    using (SqlCommand cmd = new SqlCommand("CreatePatient", GlobalConfig.SQLCONN))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@FirstName", FirstName);
+                        cmd.Parameters.AddWithValue("@LastName", LastName);
+                        cmd.Parameters.AddWithValue("@IDNumber", IDNumber);
+                        cmd.Parameters.AddWithValue("@Email", Email);
+                        cmd.Parameters.AddWithValue("@ContactNo", ContactNo);
+                        cmd.Parameters.AddWithValue("@PostalAddress", PostalAddress);
+                        cmd.Parameters.AddWithValue("@MedicalAidNo", MedicalAidNo);
+
+                        GlobalConfig.SQLCONN.Open();
+                        cmd.ExecuteNonQuery();
+                        GlobalConfig.SQLCONN.Close();
+                        //MessageBox.Show("Your Patient Has Been Saved");
+                    }
+                }
+                catch (Exception Ex)
+                {
+                    MessageBox.Show($"{Ex.Message}");
+                }
+                finally
+                {
+                    GlobalConfig.SQLCONN.Close();
+                }
+            });
+
+            t.RunSynchronously();
+            t.Wait();
+
+        }
+
+        /*
+            - We are using a globalConfig STATIC class we created so that we dont have to repeat code
+            - This Method Opens up a connection to the database using the SqlCommand and calling the stored procedure 
+            - Once open it will add the values to the stored procedure's parameters usng the values inserted into the 
+              CreateRecord method's parameters when calling this method
+            - At the end it closes the connection (!Very important) -- "GlobalConfig.SQLCONN.Close();"
+            - We place the method into a Task so that we can have a separate task running inside a THREAD
+        */
+        public void CreateRecord(TextBox IDnumber, DateTimePicker DateOfVisit, TextBox ReasonForVisit)
+        {
+            Task t = new Task(() =>
+           {
+               try
+               {
+
+                   using (SqlCommand cmd = new SqlCommand("CreateRecord", GlobalConfig.SQLCONN))
+                   {
+                       cmd.CommandType = CommandType.StoredProcedure;
+
+                       cmd.Parameters.AddWithValue("@IDNumber", IDnumber.Text);
+                       cmd.Parameters.AddWithValue("@DateOfVisit", DateOfVisit.Value.ToShortDateString());
+                       cmd.Parameters.AddWithValue("@ReasonForVisit", ReasonForVisit.Text);
+
+                       GlobalConfig.SQLCONN.Open();
+                       cmd.ExecuteNonQuery();
+                       GlobalConfig.SQLCONN.Close();
+                       MessageBox.Show("Congradulations you are now a user");
+                   }
+               }
+               catch (Exception Ex)
+               {
+                   MessageBox.Show($"{Ex.Message}");
+               }
+               finally
+               {
+                   GlobalConfig.SQLCONN.Close();
+               }
+
+           });
+
+            // Runs the TASK created 
+            t.RunSynchronously();
+            // Wait needs to be inserted so that the task doesnt close off before it has been ran
+            t.Wait();
+        }
+
+        // - Overloaded CreateRecord method with string instead of TextBox signatures
+        public void CreateRecord(string IDnumber, string DateOfVisit, string ReasonForVisit)
+        {
+            Task t = new Task(() =>
+           {
+               try
+               {
+
+                   using (SqlCommand cmd = new SqlCommand("CreateRecord", GlobalConfig.SQLCONN))
+                   {
+                       cmd.CommandType = CommandType.StoredProcedure;
+
+                       cmd.Parameters.AddWithValue("@IDNumber", IDnumber);
+                       cmd.Parameters.AddWithValue("@DateOfVisit", DateOfVisit);
+                       cmd.Parameters.AddWithValue("@ReasonForVisit", ReasonForVisit);
+
+                       GlobalConfig.SQLCONN.Open();
+                       cmd.ExecuteNonQuery();
+                       GlobalConfig.SQLCONN.Close();
+                       // MessageBox.Show("Congradulations you are now a user");
+                   }
+               }
+               catch (Exception Ex)
+               {
+                   MessageBox.Show($"{Ex.Message}");
+               }
+               finally
+               {
+                   GlobalConfig.SQLCONN.Close();
+               }
+
+           });
+
+            // Runs the TASK created 
+            t.RunSynchronously();
+            // Wait needs to be inserted so that the task doesnt close off before it has been ran
+            t.Wait();
+        }
+    }
+}
