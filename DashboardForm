@@ -1,0 +1,168 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace DoctorDB.Forms
+{
+    public partial class DashboardForm : Form
+    {
+
+        Button butt = new Button();
+        Label signOutLabel = new Label();
+        Label label = new Label();
+        LinkLabel linkedLabel = new LinkLabel();
+
+        PatientsForm pForm = new PatientsForm();
+        SettingsForm sForm = new SettingsForm();
+        Appointments aForm = new Appointments();
+        CreatePatientForm cPForm = new CreatePatientForm();
+
+        public DashboardForm(string user)
+        {
+            InitializeComponent();
+            // When you hover over the Patient button you get a tip to say what type of button it is
+            toolTipPatient.SetToolTip(btnPatient, "Patient");
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (sender.GetType().Name == "Label")
+            {
+                label = (Label)sender;
+
+            }
+            else if (sender.GetType().Name == "LinkLabel")
+            {
+                linkedLabel = (LinkLabel)sender;
+
+            }
+            else
+            {
+                butt = (Button)sender;
+
+            }
+
+            if (label.Name == "btnLogout")
+            {
+                this.Close();
+            }
+            ////else if (label.Name == "PatientsLabel")
+            ////{
+            ////    pMainView.Controls.Remove(aForm);
+            ////    pMainView.Controls.Remove(sForm);
+            ////    pMainView.Controls.Remove(cPForm);
+            ////    lblForm.Text = "Patients";
+            ////    pForm.TopLevel = false;
+            ////    pMainView.Controls.Add(pForm);
+            ////    pForm.FormBorderStyle = FormBorderStyle.None;
+            ////    pForm.Dock = DockStyle.Fill;
+            ////    pForm.Show();
+            ////}
+            ////else if (label.Name == "AppointmentLabel")
+            ////{
+            ////    pMainView.Controls.Remove(pForm);
+            ////    pMainView.Controls.Remove(sForm);
+            ////    pMainView.Controls.Remove(cPForm);
+            ////    lblForm.Text = "Appointments";
+            ////    aForm.TopLevel = false;
+            ////    pMainView.Controls.Add(aForm);
+            ////    aForm.FormBorderStyle = FormBorderStyle.None;
+            ////    aForm.Dock = DockStyle.Fill;
+            ////    aForm.Show();
+            ////}
+            ////else if (label.Name == "SettingsLabel")
+            ////{
+            ////    pMainView.Controls.Remove(aForm);
+            ////    pMainView.Controls.Remove(pForm);
+            ////    pMainView.Controls.Remove(cPForm);
+            ////    lblForm.Text = "Settings";
+            ////    sForm.TopLevel = false;
+            ////    pMainView.Controls.Add(sForm);
+            ////    sForm.FormBorderStyle = FormBorderStyle.None;
+            ////    sForm.Dock = DockStyle.Fill;
+            ////    sForm.Show();
+            ////}
+            ////else if (linkedLabel.Name == "CreatePatientLabel")
+            ////{
+            ////    pMainView.Controls.Remove(aForm);
+            ////    pMainView.Controls.Remove(pForm);
+            ////    pMainView.Controls.Remove(sForm);
+            ////    lblForm.Text = "Create Patient";
+            ////    cPForm.TopLevel = false;
+            ////    pMainView.Controls.Add(cPForm);
+            ////    cPForm.FormBorderStyle = FormBorderStyle.None;
+            ////    cPForm.Dock = DockStyle.Fill;
+            ////    cPForm.Show();
+            ////}
+            else
+            {
+                switch (butt.Name)
+                {
+                    case "btnPatient":
+                        pMainView.Controls.Remove(aForm);
+                        pMainView.Controls.Remove(sForm);
+                        pMainView.Controls.Remove(cPForm);
+                        lblForm.Text = "Patients";
+                        pForm.TopLevel = false;
+                        pMainView.Controls.Add(pForm);
+                        pForm.FormBorderStyle = FormBorderStyle.None;
+                        pForm.Dock = DockStyle.Fill;
+                        pForm.Show();
+                        break;
+
+                    case "btnAppointment":
+                        pMainView.Controls.Remove(pForm);
+                        pMainView.Controls.Remove(sForm);
+                        pMainView.Controls.Remove(cPForm);
+                        lblForm.Text = "Appointments";
+                        aForm.TopLevel = false;
+                        pMainView.Controls.Add(aForm);
+                        aForm.FormBorderStyle = FormBorderStyle.None;
+                        aForm.Dock = DockStyle.Fill;
+                        aForm.Show();
+                        break;
+
+                    case "btnSettings":
+                        pMainView.Controls.Remove(aForm);
+                        pMainView.Controls.Remove(pForm);
+                        pMainView.Controls.Remove(cPForm);
+                        lblForm.Text = "Settings";
+                        sForm.TopLevel = false;
+                        pMainView.Controls.Add(sForm);
+                        sForm.FormBorderStyle = FormBorderStyle.None;
+                        sForm.Dock = DockStyle.Fill;
+                        sForm.Show();
+                        break;
+
+                    case "btnCreatePatient":
+                        pMainView.Controls.Remove(aForm);
+                        pMainView.Controls.Remove(pForm);
+                        pMainView.Controls.Remove(sForm);
+                        lblForm.Text = "Create Patient";
+                        cPForm.TopLevel = false;
+                        pMainView.Controls.Add(cPForm);
+                        cPForm.FormBorderStyle = FormBorderStyle.None;
+                        cPForm.Dock = DockStyle.Fill;
+                        cPForm.Show();
+                        break;
+
+                    case "btnLogout":
+                        this.Close();
+                        break;
+                }
+            }
+        }
+
+        private void MessageButton_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
