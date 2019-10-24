@@ -1,0 +1,102 @@
+using DoctorDBLibrary;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+
+namespace DoctorDB.Forms
+{
+    public partial class CreatePatientForm : Form
+    {
+
+        
+
+        public CreatePatientForm()
+        {
+            InitializeComponent();
+           
+        }
+
+
+
+        private void CreateBtn_Click(object sender, EventArgs e)
+        {
+            string txtPostalAddress = txtAL1.Text + " " + txtAL2.Text + " " + txtSuburb.Text + " " + txtCity.Text + " " + txtZCode.Text;
+           
+                if (txtFirstName.Text == "" || txtLastName.Text == "" || txtIDNumber.Text == "")
+                {
+
+                    MessageBox.Show("Make sure First Name , Last Name and ID fields are filled");
+
+                }
+
+                else
+                {
+                    //Create a txtPostalAddress - We need to combine the address of the multiple text boxes on the create form
+
+
+
+                    // 1. Create SqlCommand - Which lets the program know what type of action it is
+                    SqlCommand cmd = new SqlCommand("CreatePatient", GlobalConfig.SQLCONN);
+
+                    // 2. Set the Command type - So that it knows that we going to be using a STORED PROCEDURE
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // 3. Input the Parameters of the STORED PROCEDURE
+
+                    cmd.Parameters.AddWithValue("@FirstName", txtFirstName.Text);
+                    cmd.Parameters.AddWithValue("@LastName", txtLastName.Text);
+                    cmd.Parameters.AddWithValue("@IDNumber", txtIDNumber.Text);
+                    cmd.Parameters.AddWithValue("@ContactNo", txtContactNumber.Text);
+                    cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
+                    cmd.Parameters.AddWithValue("@PostalAddress", txtPostalAddress);
+                    cmd.Parameters.AddWithValue("@MedicalAidNo", txtMANumber.Text);
+                    cmd.Parameters.AddWithValue("@Gender", txtGender.Text);
+                    cmd.Parameters.AddWithValue("@DOB", dpDOB.Text);
+                    cmd.Parameters.AddWithValue("@BenefitType", txtBenefitType.Text);
+
+                    // 4. Open and Close the Connection to the Database
+                    GlobalConfig.SQLCONN.Open();
+                    cmd.ExecuteNonQuery();
+                    GlobalConfig.SQLCONN.Close();
+
+                    MessageBox.Show("New Patient Added!");
+
+
+                    // Clears all the textboxes 
+
+                    txtAL1.Clear();
+                    txtAL2.Clear();
+                    txtSuburb.Clear();
+                    txtCity.Clear();
+                    txtZCode.Clear();
+
+
+                    // After Clicking on the create button it clears all the values so that you can add a new patient
+                    GlobalConfig.ClearEvents.CreatePatientForm(txtFirstName, txtLastName, txtIDNumber, txtContactNumber, txtEmail, dpDOB, txtMANumber, txtGender, txtBenefitType);
+
+                    // This is how to call methods from another FORM!
+                    var pForm = Application.OpenForms.OfType<PatientsForm>().Single();
+                    pForm.RefreshList();
+
+                }
+            
+
+
+           
+       
+        }
+
+        private void txtFirstName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
